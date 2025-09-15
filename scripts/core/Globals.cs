@@ -1,4 +1,4 @@
-using Godot;
+ using Godot;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -14,11 +14,8 @@ namespace Game.Core
         public override void _Ready()
         {
             Instance = this;
-
+            
             Logger.Debug("Loading Globals ...");
-            Logger.Info("Loading Globals ...");
-            Logger.Warning("Loading Globals ...");
-            Logger.Error("Loading Globals ...");
                                                 
         }
     }
