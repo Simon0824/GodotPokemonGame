@@ -9,7 +9,7 @@ namespace Game.Gameplay
     {
         [ExportCategory("State Vars")]
         [Export] public PlayerInput PlayerInput;
-
+        [Export] public CharacterMovement CharacterMovement;
         public override void _Process(double delta)
         {
             GetInputDirection();
@@ -42,7 +42,8 @@ namespace Game.Gameplay
 
         public void GetInput(double delta)
         {
-
+            if (CharacterMovement.IsMoving()) return;
+            
             if (Modules.IsActionJustReleased())
             {
                 if (PlayerInput.HoldTime > PlayerInput.HoldThreshold)

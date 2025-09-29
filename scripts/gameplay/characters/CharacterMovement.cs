@@ -1,6 +1,8 @@
 using Game.Core;
 using Godot;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Game.Gameplay
 {
@@ -10,18 +12,19 @@ namespace Game.Gameplay
 
         [ExportCategory("Nodes")]
         [Export] public Node2D Character;
-
         [Export] public CharacterInput CharacterInput;
 
-        [ExportCategory("Movement")]
 
+        [ExportCategory("Movement")]
         [Export] public Vector2 TargetPosition = Vector2.Down;
         [Export] public bool IsWalking = false;
+        [Export] public bool CollisionDetected = false;
         public override void _Ready()
         {
             CharacterInput.Walk += StartWalking;
             CharacterInput.Turn += Turn;
-            Logger.Info("Loading player movement component ...");
+
+            Logger.Info("Loading character movement component ...");
         }
 
         public override void _Process(double delta)
@@ -34,12 +37,57 @@ namespace Game.Gameplay
             return IsWalking;
         }
 
+
+        public bool IsColliding()
+        {
+            return CollisionDetected;
+        }
+
+        private bool IsTargetOccupied(Vector2 targetPosition)
+        {
+            var spaceState = GetViewport().GetWorld2D().DirectSpaceState;
+
+            Vector2 adjustedTargetPosition = targetPosition;
+            adjustedTargetPosition.X += 8;
+            adjustedTargetPosition.Y += 8;
+
+            var query = new PhysicsPointQueryParameters2D
+            {
+                Position = adjustedTargetPosition,
+                CollisionMask = 1,
+                CollideWithAreas = true
+            };
+
+            var result = spaceState.IntersectPoint(query);
+
+            if (result.Count > 0)
+            {
+                foreach (var collision in result)
+                {
+                    var collider = (Node)(GodotObject)collision["collider"];
+                    var colliderType = collider.GetType().Name;
+
+                    Logger.Info(collider);
+                    
+                    switch (colliderType)
+                    {
+                        case "TileMapLayer":
+                            return true;
+                        default:
+                            return true;
+                    }
+                }
+            }
+
+            return false;
+
+        }
         public void StartWalking()
         {
+            TargetPosition = Character.Position + CharacterInput.Direction * Globals.Instance.GRID_SIZE;
             EmitSignal(SignalName.Animation, "walk");
-            if (!IsMoving())
+            if (!IsMoving() && !IsTargetOccupied(TargetPosition))
             {
-                TargetPosition = Character.Position + CharacterInput.Direction * Globals.Instance.GRID_SIZE;
                 Logger.Info($"Moving from {Character.Position} to {TargetPosition}");
                 IsWalking = true;
             }

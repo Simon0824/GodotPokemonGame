@@ -11,7 +11,7 @@ namespace Game.Gameplay
     [Export] public double HoldTime = 0.0f;
     public override void _Ready()
     {
-        Logger.Info("Loading playeer input component");
+        Logger.Info("Loading player input component");
     }
  }
 }

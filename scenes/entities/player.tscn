@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://4c8bbwg3kd0j"]
+[gd_scene load_steps=39 format=3 uid="uid://4c8bbwg3kd0j"]
 
 [ext_resource type="Script" uid="uid://cbg7mikjutvql" path="res://scripts/gameplay/characters/PlayerInput.cs" id="1_08t41"]
 [ext_resource type="Script" uid="uid://skrlq35lnv3x" path="res://scripts/gameplay/characters/Player.cs" id="1_ss7kx"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://ctrb6ovkatw83" path="res://scripts/gameplay/characters/CharacterAnimation.cs" id="4_42nxq"]
 [ext_resource type="Script" uid="uid://cd4wjd4qdcprd" path="res://scripts/utilities/StateMachine.cs" id="5_5u6hq"]
 [ext_resource type="Script" uid="uid://ckchtjgo7bou2" path="res://scripts/gameplay/characters/States/PlayerRoam.cs" id="6_d4qa6"]
+[ext_resource type="Script" uid="uid://dlhgi0gasbb3k" path="res://scripts/gameplay/characters/CharacterCollisionRayCast.cs" id="6_dnykm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0qees"]
 size = Vector2(16, 16)
@@ -301,16 +302,19 @@ position = Vector2(8, 8)
 zoom = Vector2(3, 3)
 position_smoothing_enabled = true
 
-[node name="CollisionRayCast" type="RayCast2D" parent="."]
+[node name="CollisionRayCast" type="RayCast2D" parent="." node_paths=PackedStringArray("CharacterInput")]
 position = Vector2(8, 8)
 target_position = Vector2(0, 16)
 collide_with_areas = true
+script = ExtResource("6_dnykm")
+CharacterInput = NodePath("../Input")
 
 [node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("Customer")]
 script = ExtResource("5_5u6hq")
 Customer = NodePath("..")
 
-[node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("PlayerInput", "StateOwner")]
+[node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("PlayerInput", "CharacterMovement", "StateOwner")]
 script = ExtResource("6_d4qa6")
 PlayerInput = NodePath("../../Input")
+CharacterMovement = NodePath("../../movement")
 StateOwner = NodePath("../..")
