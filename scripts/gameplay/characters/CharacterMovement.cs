@@ -67,15 +67,12 @@ namespace Game.Gameplay
                     var collider = (Node)(GodotObject)collision["collider"];
                     var colliderType = collider.GetType().Name;
 
-                    Logger.Info(collider);
-                    
-                    switch (colliderType)
+                    return colliderType switch
                     {
-                        case "TileMapLayer":
-                            return true;
-                        default:
-                            return true;
-                    }
+                        "TileMapLayer" => true,
+                        "SceneTrigger" => false,
+                        _ => true,
+                    };
                 }
             }
 

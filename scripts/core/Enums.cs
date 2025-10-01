@@ -1,5 +1,6 @@
 namespace Game.Core
 {
+    #region Logs
     public enum LogLevel
     {
         DEBUG,
@@ -7,7 +8,9 @@ namespace Game.Core
         WARNING,
         ERROR
     }
+    #endregion
 
+    #region Characters
     public enum ECharacterAnimation
     {
         idle_down,
@@ -23,4 +26,25 @@ namespace Game.Core
         walk_left,
         walk_right
     }
+    #endregion
+
+    #region Levels
+
+    public enum LevelName
+    {
+        wioska,
+        wioska_zielony_domek,
+        wioska_fioletowy_domek,
+        wioska_centrum_pokemon,
+        wioska_jaskinia,
+    }
+    #endregion
+
+    #region Groups
+    public enum LevelGroup
+    {
+        SPAWNPOINTS,
+        SCENETRIGGERS,
+    }
+    #endregion
 }
