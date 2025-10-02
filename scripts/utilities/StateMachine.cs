@@ -6,8 +6,10 @@ namespace Game.Utilities
     public partial class StateMachine : Node
     {
         [ExportCategory("State Machine Vars")]
-        [Export] public Node Customer;
-        [Export] public State CurrentState;
+        [Export]
+        public Node Customer;
+        [Export]
+        public State CurrentState;
 
         public override void _Ready()
         {

@@ -3,25 +3,44 @@ using Godot;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata.Ecma335;
+using System.Runtime.InteropServices;
 
 namespace Game.Gameplay
 {
     public partial class CharacterMovement : Node
     {
-        [Signal] public delegate void AnimationEventHandler(string animationType);
+        [Signal]
+        public delegate void AnimationEventHandler(string animationType);
 
         [ExportCategory("Nodes")]
-        [Export] public Node2D Character;
-        [Export] public CharacterInput CharacterInput;
+        [Export]
+        public Node2D Character;
+        [Export]
+        public CharacterInput CharacterInput;
 
 
         [ExportCategory("Movement")]
-        [Export] public Vector2 TargetPosition = Vector2.Down;
-        [Export] public bool IsWalking = false;
-        [Export] public bool CollisionDetected = false;
+        [Export]
+        public Vector2 TargetPosition = Vector2.Down;
+        [Export]
+        public bool IsWalking = false;
+        [Export]
+        public bool CollisionDetected = false;
+        [Export]
+        public Vector2 StartPosition;
+        [Export]
+        public bool IsJumping = false;
+        [Export]
+        public float JumpHeight = 10f;
+        [Export]
+        public float LerpSpeed = 2f;
+        [Export]
+        public float Progress = 0f;
+        [Export]
+        public ECharacterMovement ECharacterMovement = ECharacterMovement.WALKING;
         public override void _Ready()
         {
-            CharacterInput.Walk += StartWalking;
+            CharacterInput.Walk += StartMoving;
             CharacterInput.Turn += Turn;
 
             Logger.Info("Loading character movement component ...");
@@ -30,11 +49,16 @@ namespace Game.Gameplay
         public override void _Process(double delta)
         {
             Walk(delta);
+            Jump(delta);
+            if (!IsMoving() && !Modules.IsActionJustPressed())
+            {
+                EmitSignal(SignalName.Animation, "idle");
+            }
         }
 
         public bool IsMoving()
         {
-            return IsWalking;
+            return IsWalking || IsJumping;
         }
 
 
@@ -69,7 +93,7 @@ namespace Game.Gameplay
 
                     return colliderType switch
                     {
-                        "TileMapLayer" => true,
+                        "TileMapLayer" => GetTileMapLayerCollision((TileMapLayer)collider, adjustedTargetPosition),
                         "SceneTrigger" => false,
                         _ => true,
                     };
@@ -79,18 +103,66 @@ namespace Game.Gameplay
             return false;
 
         }
-        public void StartWalking()
+
+        public bool GetTileMapLayerCollision(TileMapLayer tileMapLayer, Vector2 adjustedTargetPosition)
         {
+            Vector2I tileCoordinates = tileMapLayer.LocalToMap(adjustedTargetPosition);
+            TileData tileData = tileMapLayer.GetCellTileData(tileCoordinates);
+            if (tileData == null)
+                return true;
+            var ledgeDirection = (string)tileData.GetCustomData("LEDGE");
+            if (ledgeDirection == null)
+                return true;
+
+            Logger.Info("Ledge direction " + ledgeDirection);
+
+            switch (ledgeDirection)
+            {
+                case "DOWN":
+                    if (CharacterInput.Direction == Vector2.Down)
+                    {
+                        ECharacterMovement = ECharacterMovement.JUMPING;
+                        return false;
+                    }
+                    break;
+                case "LEFT":
+                    if (CharacterInput.Direction == Vector2.Left)
+                    {
+                        ECharacterMovement = ECharacterMovement.JUMPING;
+                        return false;
+                    }
+                    break;
+                case "RIGHT":
+                    if (CharacterInput.Direction == Vector2.Right)
+                    {
+                        ECharacterMovement = ECharacterMovement.JUMPING;
+                        return false;
+                    }
+                    break;
+            }
+            return true;
+        }
+        public void StartMoving()
+        {
+            if (SceneManager.IsChanging)
+                return;
             TargetPosition = Character.Position + CharacterInput.Direction * Globals.Instance.GRID_SIZE;
             EmitSignal(SignalName.Animation, "walk");
             if (!IsMoving() && !IsTargetOccupied(TargetPosition))
             {
                 Logger.Info($"Moving from {Character.Position} to {TargetPosition}");
-                IsWalking = true;
-            }
-            else
-            {
-                EmitSignal(SignalName.Animation, "idle");
+
+                if (ECharacterMovement == ECharacterMovement.JUMPING)
+                {
+                    Progress = 0f;
+                    StartPosition = Character.Position;
+                    TargetPosition = Character.Position + CharacterInput.Direction * Globals.Instance.GRID_SIZE * 2;
+                    IsJumping = true;
+                }
+                else
+                {
+                    IsWalking = true;
+                }
             }
         }
 
@@ -101,18 +173,33 @@ namespace Game.Gameplay
                 Character.Position = Character.Position.MoveToward(TargetPosition, (float)delta * Globals.Instance.GRID_SIZE * 4);
                 if (Character.Position.DistanceTo(TargetPosition) < 1f)
                 {
-                    StopWalking();
+                    StopMoving();
                 }
-            }
-            else
-            {
-                EmitSignal(SignalName.Animation, "idle");
             }
         }
 
-        public void StopWalking()
+        public void Jump(double delta)
+        {
+            if (IsJumping)
+            {
+                Progress += LerpSpeed * (float)delta;
+                Vector2 position = StartPosition.Lerp(TargetPosition, Progress);
+                float parabolicOffset = JumpHeight * (1 - 4 * (Progress * 0.5f) * (Progress * 0.5f));
+                position.Y -= parabolicOffset;
+                Character.Position = position;
+
+                if (Progress >= 1f)
+                {
+                    StopMoving();
+                }
+            }
+        }
+
+        public void StopMoving()
         {
             IsWalking = false;
+            IsJumping = false;
+            ECharacterMovement = ECharacterMovement.WALKING;
             SnapPositionToGrid();
         }
 

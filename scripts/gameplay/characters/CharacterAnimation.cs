@@ -8,11 +8,14 @@ namespace Game.Gameplay
     {
 
         [ExportCategory("Nodes")]
-        [Export] public CharacterInput CharacterInput;
-        [Export] public CharacterMovement CharacterMovement;
+        [Export]
+        public CharacterInput CharacterInput;
+        [Export]
+        public CharacterMovement CharacterMovement;
 
         [ExportCategory("Animations Vars")]
-        [Export] public ECharacterAnimation ECharacterAnimation = ECharacterAnimation.idle_down;
+        [Export]
+        public ECharacterAnimation ECharacterAnimation = ECharacterAnimation.idle_down;
         public override void _Ready()
         {
             CharacterMovement.Animation += PlayAnimation;

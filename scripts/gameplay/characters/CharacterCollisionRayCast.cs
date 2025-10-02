@@ -5,11 +5,14 @@ using System;
 
 public partial class CharacterCollisionRayCast : RayCast2D
 {
-    [Signal] public delegate void CollisionEventHandler(bool collided);
+    [Signal]
+    public delegate void CollisionEventHandler(bool collided);
 
     [ExportCategory("Collision Vars")]
-    [Export] public CharacterInput CharacterInput;
-    [Export] public GodotObject Collider;
+    [Export]
+    public CharacterInput CharacterInput;
+    [Export]
+    public GodotObject Collider;
     public override void _Ready()
     {
         Logger.Info("Loading character collision ray cast component ...");

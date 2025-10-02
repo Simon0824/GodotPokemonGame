@@ -47,4 +47,12 @@ namespace Game.Core
         SCENETRIGGERS,
     }
     #endregion
+
+    #region Movements
+    public enum ECharacterMovement
+    {
+        WALKING,
+        JUMPING,
+    }
+    #endregion
 }
