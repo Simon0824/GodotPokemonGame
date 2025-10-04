@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-namespace Game.Utilities
-{
+namespace Game.Utilities;
     public partial class StateMachine : Node
     {
         [ExportCategory("State Machine Vars")]
@@ -42,6 +41,21 @@ namespace Game.Utilities
                 }
             }
         }
+
+        public void ChangeState(string newState)
+        {
+            var _state = GetNode<State>(newState); 
+            CurrentState?.ExitState();
+            CurrentState = _state;
+            CurrentState?.EnterState();
+
+            foreach (Node child in GetChildren())
+            {
+                if (child is State state)
+                {
+                    state.SetProcess(child == CurrentState);
+                }
+            }
+        }
     }
-}
 

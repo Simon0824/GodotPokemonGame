@@ -5,9 +5,9 @@
 [ext_resource type="Texture2D" uid="uid://csub4bbcv6cv3" path="res://assets/characters/player1.png" id="1_ucweq"]
 [ext_resource type="Script" uid="uid://dwbbya1adgs08" path="res://scripts/gameplay/characters/CharacterMovement.cs" id="2_1ie0h"]
 [ext_resource type="Script" uid="uid://ctrb6ovkatw83" path="res://scripts/gameplay/characters/CharacterAnimation.cs" id="4_42nxq"]
-[ext_resource type="Script" uid="uid://cd4wjd4qdcprd" path="res://scripts/utilities/StateMachine.cs" id="5_5u6hq"]
 [ext_resource type="Script" uid="uid://ckchtjgo7bou2" path="res://scripts/gameplay/characters/States/PlayerRoam.cs" id="6_d4qa6"]
 [ext_resource type="Script" uid="uid://dlhgi0gasbb3k" path="res://scripts/gameplay/characters/CharacterCollisionRayCast.cs" id="6_dnykm"]
+[ext_resource type="Script" uid="uid://4av4e8tn676o" path="res://scripts/gameplay/characters/States/PlayerMessageState.cs" id="9_c5rqy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0qees"]
 size = Vector2(16, 16)
@@ -309,12 +309,19 @@ collide_with_areas = true
 script = ExtResource("6_dnykm")
 CharacterInput = NodePath("../Input")
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("Customer")]
-script = ExtResource("5_5u6hq")
-Customer = NodePath("..")
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("StateOwner", "StateMachine")]
+script = ExtResource("9_c5rqy")
+StateOwner = NodePath("..")
+StateMachine = NodePath(".")
 
-[node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("PlayerInput", "CharacterMovement", "StateOwner")]
+[node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("PlayerInput", "CharacterMovement", "StateOwner", "StateMachine")]
 script = ExtResource("6_d4qa6")
 PlayerInput = NodePath("../../Input")
 CharacterMovement = NodePath("../../movement")
 StateOwner = NodePath("../..")
+StateMachine = NodePath("..")
+
+[node name="Message" type="Node" parent="StateMachine" node_paths=PackedStringArray("StateOwner", "StateMachine")]
+script = ExtResource("9_c5rqy")
+StateOwner = NodePath("../..")
+StateMachine = NodePath("..")

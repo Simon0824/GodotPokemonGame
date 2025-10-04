@@ -1,3 +1,4 @@
+using Game.UI;
 using Godot;
 using System;
 
@@ -21,7 +22,9 @@ namespace Game.Core
 
             Logger.Info("Loading game manager ...");
 
-            SceneManager.ChangeLevel(spawn: true); 
+            SceneManager.ChangeLevel(spawn: true);
+
+            MessageManager.PlayText("Witaj w grze!");
         }
 
         public static SubViewport GetGameViewPort()
