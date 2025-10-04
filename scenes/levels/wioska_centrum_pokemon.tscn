@@ -24,7 +24,7 @@ tile_set = ExtResource("2_720pn")
 
 [node name="SceneTrigger" parent="SceneTriggers" instance=ExtResource("3_jedkr")]
 position = Vector2(240, 232)
-TargetLevelTrigger = 5
+TargetLevelTrigger = 8
 CurrentLevelTrigger = 4
 EntryDirection = Vector2(0, -1)
 

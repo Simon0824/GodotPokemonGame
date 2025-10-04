@@ -75,7 +75,7 @@ EntryDirection = Vector2(0, 1)
 position = Vector2(144, 256)
 TargetLevelName = 3
 TargetLevelTrigger = 4
-CurrentLevelTrigger = 5
+CurrentLevelTrigger = 8
 EntryDirection = Vector2(0, 1)
 
 [node name="SceneTrigger4" parent="SceneTriggers" instance=ExtResource("3_ux2jh")]
