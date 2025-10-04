@@ -3,8 +3,7 @@ using Game.Utilities;
 using System;
 using Game.Core;
 
-namespace Game.Gameplay
-{
+namespace Game.Gameplay;
     public partial class PlayerRoam : State
     {
         [ExportCategory("State Vars")]
@@ -13,13 +12,13 @@ namespace Game.Gameplay
 
         public override void _Ready()
         {
-            Signals.Instance.MessageBoxOpen += (value) =>
+       Signals.Instance.MessageBoxOpen += (value) =>
+        {
+            if (value)
             {
-                if (value)
-                {
-                    StateMachine.ChangeState("Message");
-                }
-            };
+                StateMachine.ChangeState("Message");
+            }
+        };
         }
         public override void _Process(double delta)
         {
@@ -79,5 +78,4 @@ namespace Game.Gameplay
             }
         }
     }
-}
 

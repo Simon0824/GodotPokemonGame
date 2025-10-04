@@ -1,8 +1,7 @@
 using Godot;
 using System;
 
-namespace Game.Core
-{
+namespace Game.Core;
     public static class Logger
     {
         public static void Log(LogLevel level, params object[] message)
@@ -56,4 +55,3 @@ namespace Game.Core
             Log(LogLevel.ERROR, message);
         }
     }
-}

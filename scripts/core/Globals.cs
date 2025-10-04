@@ -2,8 +2,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace Game.Core
-{
+namespace Game.Core;
     public partial class Globals : Node
     {
         public static Globals Instance { get; private set; }
@@ -19,5 +18,3 @@ namespace Game.Core
                                                 
         }
     }
-
-}

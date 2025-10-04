@@ -27,35 +27,36 @@ namespace Game.Utilities;
             return CurrentState.Name.ToString();
         }
 
-        public void ChangeState(State newState)
-        {
-            CurrentState?.ExitState();
-            CurrentState = newState;
-            CurrentState?.EnterState();
+     public void ChangeState(State newState)
+    {
+        CurrentState?.ExitState();
+        CurrentState = newState;
+        CurrentState?.EnterState();
 
-            foreach (Node child in GetChildren())
+        foreach (Node child in GetChildren())
+        {
+            if (child is State state)
             {
-                if (child is State state)
-                {
-                    state.SetProcess(child == CurrentState);
-                }
+                state.SetProcess(child == CurrentState);
             }
         }
+    }
 
-        public void ChangeState(string newState)
+    public void ChangeState(string newState)
+    {
+        var _state = GetNode<State>(newState);
+
+        CurrentState?.ExitState();
+        CurrentState = _state;
+        CurrentState?.EnterState();
+
+        foreach (Node child in GetChildren())
         {
-            var _state = GetNode<State>(newState); 
-            CurrentState?.ExitState();
-            CurrentState = _state;
-            CurrentState?.EnterState();
-
-            foreach (Node child in GetChildren())
+            if (child is State state)
             {
-                if (child is State state)
-                {
-                    state.SetProcess(child == CurrentState);
-                }
+                state.SetProcess(child == CurrentState);
             }
         }
+    }
     }
 

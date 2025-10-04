@@ -1,9 +1,9 @@
+using Game.Gameplay;
 using Game.UI;
 using Godot;
 using System;
 
-namespace Game.Core
-{
+namespace Game.Core;
     public partial class GameManager : Node
     {
 
@@ -46,5 +46,4 @@ namespace Game.Core
             return Instance.Player;
         }
     }
-}
 

@@ -51,6 +51,7 @@ public partial class MessageManager : CanvasLayer
         if (Instance.Messages.Count == 0)
         {
             Instance.Box.Visible = false;
+            Signals.EmitGlobalSignals(Signals.SignalName.MessageBoxOpen, false);
             return;
         }
 

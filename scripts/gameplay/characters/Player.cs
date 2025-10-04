@@ -1,6 +1,7 @@
 using Game.Utilities;
 using Godot;
-using System;
+
+namespace Game.Gameplay;
 
 public partial class Player : CharacterBody2D
 {
@@ -10,6 +11,6 @@ public partial class Player : CharacterBody2D
     public override void _Ready()
     {
         StateMachine.Customer = this;
-        StateMachine.ChangeState(StateMachine.GetNode<State>("Roam"));
+        StateMachine.ChangeState(StateMachine.GetNode<State>("Message"));
     }
 }
