@@ -20,7 +20,7 @@ namespace Game.Core
         public static void EmitGlobalSignals(StringName signal, params Variant[] args)
         {
             Logger.Info("Global signal emitted: ", signal, args);
-            Instance.EmitSignal(signal, args); 
+            Instance.EmitSignal(signal, args);  
         }
     }
 
