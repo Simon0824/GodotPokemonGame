@@ -100,6 +100,7 @@ namespace Game.Gameplay
                     return colliderType switch
                     {
                         "Sign" => true,
+                        "TallGrass" => false, 
                         "TileMapLayer" => GetTileMapLayerCollision((TileMapLayer)collider, adjustedTargetPosition),
                         "SceneTrigger" => false,
                         _ => true,

@@ -30,7 +30,7 @@ namespace Game.Core
         {
             while (IsChanging)
             {
-              await Instance.ToSignal(Instance.GetTree(), SceneTree.SignalName.ProcessFrame);
+                await Instance.ToSignal(Instance.GetTree(), SceneTree.SignalName.ProcessFrame);
             }
 
             IsChanging = true;
@@ -38,7 +38,7 @@ namespace Game.Core
             await Instance.GetLevel(levelName);
 
             await Instance.ToSignal(Instance.GetTree(), SceneTree.SignalName.ProcessFrame);
-            
+
             if (spawn)
             {
                 Instance.Spawn();
@@ -69,7 +69,7 @@ namespace Game.Core
             }
             else
             {
-                CurrentLevel = GD.Load<PackedScene>("res://scenes/levels/" +  levelName + ".tscn").Instantiate<Level>();
+                CurrentLevel = GD.Load<PackedScene>("res://scenes/levels/" + levelName + ".tscn").Instantiate<Level>();
                 AllLevels.Add(CurrentLevel);
                 GameManager.GetGameViewPort().AddChild(CurrentLevel);
             }
@@ -114,6 +114,11 @@ namespace Game.Core
             Tween tween = CreateTween();
             tween.TweenProperty(FadeRect, "modulate:a", 0.0, 0.25);
             await ToSignal(tween, Tween.SignalName.Finished);
+        }
+
+        public static Level GetCurrentLevel()
+        {
+            return Instance.CurrentLevel;
         }
     }
 }
