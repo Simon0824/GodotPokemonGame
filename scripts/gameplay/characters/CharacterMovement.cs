@@ -1,5 +1,6 @@
 using Game.Core;
 using Godot;
+using Godot.Collections;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata.Ecma335;
@@ -67,7 +68,7 @@ namespace Game.Gameplay
             return CollisionDetected;
         }
 
-        private bool IsTargetOccupied(Vector2 targetPosition)
+        public (Vector2, Array<Dictionary>) GetTarbetColliders(Vector2 targetPosition)
         {
             var spaceState = GetViewport().GetWorld2D().DirectSpaceState;
 
@@ -82,7 +83,12 @@ namespace Game.Gameplay
                 CollideWithAreas = true
             };
 
-            var result = spaceState.IntersectPoint(query);
+            return (adjustedTargetPosition, spaceState.IntersectPoint(query));
+        }
+
+        private bool IsTargetOccupied(Vector2 targetPosition)
+        {
+            var (adjustedTargetPosition, result) = GetTarbetColliders(targetPosition);
 
             if (result.Count > 0)
             {
@@ -93,6 +99,7 @@ namespace Game.Gameplay
 
                     return colliderType switch
                     {
+                        "Sign" => true,
                         "TileMapLayer" => GetTileMapLayerCollision((TileMapLayer)collider, adjustedTargetPosition),
                         "SceneTrigger" => false,
                         _ => true,

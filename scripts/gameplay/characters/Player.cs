@@ -11,6 +11,6 @@ public partial class Player : CharacterBody2D
     public override void _Ready()
     {
         StateMachine.Customer = this;
-        StateMachine.ChangeState(StateMachine.GetNode<State>("Message"));
+        StateMachine.ChangeState(StateMachine.GetNode<State>("Roam"));
     }
 }

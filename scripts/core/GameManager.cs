@@ -24,7 +24,6 @@ namespace Game.Core;
 
             SceneManager.ChangeLevel(spawn: true);
 
-            MessageManager.PlayText("Witaj w grze!");
         }
 
         public static SubViewport GetGameViewPort()

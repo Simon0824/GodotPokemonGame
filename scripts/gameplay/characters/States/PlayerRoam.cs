@@ -2,80 +2,104 @@ using Godot;
 using Game.Utilities;
 using System;
 using Game.Core;
+using System.ComponentModel.DataAnnotations;
 
 namespace Game.Gameplay;
-    public partial class PlayerRoam : State
+
+public partial class PlayerRoam : State
+{
+    [ExportCategory("State Vars")]
+    [Export] public PlayerInput PlayerInput;
+    [Export] public CharacterMovement CharacterMovement;
+
+    public override void _Ready()
     {
-        [ExportCategory("State Vars")]
-        [Export] public PlayerInput PlayerInput;
-        [Export] public CharacterMovement CharacterMovement;
+        Signals.Instance.MessageBoxOpen += (value) =>
+         {
+             if (value)
+             {
+                 StateMachine.ChangeState("Message");
+             }
+         };
+    }
+    public override void _Process(double delta)
+    {
+        GetInputDirection();
+        GetInput(delta);
+        GetUseInput();
+    }
 
-        public override void _Ready()
+    public void GetInputDirection()
+    {
+        if (Input.IsActionPressed("ui_up"))
         {
-       Signals.Instance.MessageBoxOpen += (value) =>
-        {
-            if (value)
-            {
-                StateMachine.ChangeState("Message");
-            }
-        };
+            PlayerInput.Direction = Vector2.Up;
+            PlayerInput.TargetPosition = new Vector2(0, -Globals.Instance.GRID_SIZE);
         }
-        public override void _Process(double delta)
+        else if (Input.IsActionPressed("ui_down"))
         {
-            GetInputDirection();
-            GetInput(delta);
+            PlayerInput.Direction = Vector2.Down;
+            PlayerInput.TargetPosition = new Vector2(0, Globals.Instance.GRID_SIZE);
+        }
+        else if (Input.IsActionPressed("ui_left"))
+        {
+            PlayerInput.Direction = Vector2.Left;
+            PlayerInput.TargetPosition = new Vector2(-Globals.Instance.GRID_SIZE, 0);
+        }
+        else if (Input.IsActionPressed("ui_right"))
+        {
+            PlayerInput.Direction = Vector2.Right;
+            PlayerInput.TargetPosition = new Vector2(Globals.Instance.GRID_SIZE, 0);
+        }
+    }
+
+    public void GetInput(double delta)
+    {
+        if (CharacterMovement.IsMoving()) return;
+
+        if (Modules.IsActionJustReleased())
+        {
+            if (PlayerInput.HoldTime > PlayerInput.HoldThreshold)
+            {
+                PlayerInput.EmitSignal(CharacterInput.SignalName.Walk);
+            }
+            else
+            {
+                PlayerInput.EmitSignal(CharacterInput.SignalName.Turn);
+            }
+            PlayerInput.HoldTime = 0.0f;
         }
 
-        public void GetInputDirection()
+        if (Modules.IsActionPressed())
         {
-            if (Input.IsActionPressed("ui_up"))
+            PlayerInput.HoldTime += delta;
+
+            if (PlayerInput.HoldTime > PlayerInput.HoldThreshold)
             {
-                PlayerInput.Direction = Vector2.Up;
-                PlayerInput.TargetPosition = new Vector2(0, -Globals.Instance.GRID_SIZE);
-            }
-            else if (Input.IsActionPressed("ui_down"))
-            {
-                PlayerInput.Direction = Vector2.Down;
-                PlayerInput.TargetPosition = new Vector2(0, Globals.Instance.GRID_SIZE);
-            }
-            else if (Input.IsActionPressed("ui_left"))
-            {
-                PlayerInput.Direction = Vector2.Left;
-                PlayerInput.TargetPosition = new Vector2(-Globals.Instance.GRID_SIZE, 0);
-            }
-            else if (Input.IsActionPressed("ui_right"))
-            {
-                PlayerInput.Direction = Vector2.Right;
-                PlayerInput.TargetPosition = new Vector2(Globals.Instance.GRID_SIZE, 0);
+                PlayerInput.EmitSignal(CharacterInput.SignalName.Walk);
             }
         }
+    }
 
-        public void GetInput(double delta)
+    public void GetUseInput()
+    {
+        if (Input.IsActionJustReleased("use"))
         {
-            if (CharacterMovement.IsMoving()) return;
-            
-            if (Modules.IsActionJustReleased())
-            {
-                if (PlayerInput.HoldTime > PlayerInput.HoldThreshold)
-                {
-                    PlayerInput.EmitSignal(CharacterInput.SignalName.Walk);
-                }
-                else
-                {
-                    PlayerInput.EmitSignal(CharacterInput.SignalName.Turn);
-                }
-                PlayerInput.HoldTime = 0.0f;
-            }
+            var (_, result) = CharacterMovement.GetTarbetColliders(CharacterMovement.TargetPosition);
 
-            if (Modules.IsActionPressed())
+            foreach (var collision in result)
             {
-                PlayerInput.HoldTime += delta;
+                var collider = (Node)(GodotObject)collision["collider"];
+                var colliderType = collider.GetType().Name;
 
-                if (PlayerInput.HoldTime > PlayerInput.HoldThreshold)
+                switch (colliderType)
                 {
-                        PlayerInput.EmitSignal(CharacterInput.SignalName.Walk);
+                    case "Sign":
+                        ((Sign)collider).PlayMessage();
+                        break;
                 }
             }
         }
     }
+}
 

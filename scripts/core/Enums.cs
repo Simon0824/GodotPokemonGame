@@ -55,4 +55,13 @@ namespace Game.Core
         JUMPING,
     }
     #endregion
+
+    #region Sings
+
+    public enum SignsType
+    {
+        METAL,
+        WOOD,
+    }
+    #endregion
 }
