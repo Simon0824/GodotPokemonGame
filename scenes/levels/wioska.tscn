@@ -16,7 +16,7 @@ size = Vector2(17, 312)
 
 [sub_resource type="Resource" id="Resource_fwqhu"]
 script = ExtResource("8_66mkw")
-NpcMoveType = 0
+NpcMoveType = 3
 Messages = []
 WanderOrigin = Vector2(0, 0)
 WanderRadius = 64.0
@@ -24,7 +24,7 @@ WanderMoveInterval = 2.0
 PatrolPoints = []
 PatrolMoveInterval = 2.0
 PatrolIndex = 0
-LookAroundInterval = 2.0
+LookAroundInterval = 3.5
 metadata/_custom_type_script = "uid://tu5chn0c8wr1"
 
 [node name="Level" type="Node2D"]
@@ -168,6 +168,6 @@ position = Vector2(280, 144)
 
 [node name="NPcs" type="Node2D" parent="."]
 
-[node name="NPC" parent="NPcs" instance=ExtResource("7_yxgh8")]
+[node name="Hiker" parent="NPcs" instance=ExtResource("7_yxgh8")]
 position = Vector2(200, 184)
 NPCInputConfig = SubResource("Resource_fwqhu")

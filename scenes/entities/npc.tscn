@@ -58,8 +58,10 @@ CharacterMovement = NodePath("../Movement")
 script = ExtResource("4_ud5nv")
 Customer = NodePath("..")
 
-[node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("StateOwner", "StateMachine")]
+[node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("NPCInput", "CharacterMovement", "StateOwner", "StateMachine")]
 script = ExtResource("5_7t5js")
+NPCInput = NodePath("../../Input")
+CharacterMovement = NodePath("../../Movement")
 StateOwner = NodePath("../..")
 StateMachine = NodePath("..")
 
