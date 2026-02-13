@@ -7,9 +7,7 @@ namespace Game.Core;
 public partial class Globals : Node
 {
     public static Globals Instance { get; private set; }
-
-    [ExportCategory("Gameplay")]
-    [Export] public int GRID_SIZE = 16;
+    public const int GRID_SIZE = 16;
 
     [Export]
     public ulong Seed = 1337;

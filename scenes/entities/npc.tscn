@@ -1,0 +1,69 @@
+[gd_scene load_steps=12 format=3 uid="uid://cm6gd4je2fg75"]
+
+[ext_resource type="Script" uid="uid://dpb2a6jsl6fwk" path="res://scripts/gameplay/characters/Npc.cs" id="1_iify0"]
+[ext_resource type="Script" uid="uid://k53f1w7qlf61" path="res://scripts/gameplay/characters/NPCInput.cs" id="2_6jwl0"]
+[ext_resource type="Script" uid="uid://tu5chn0c8wr1" path="res://scripts/gameplay/characters/NPCInputConfig.cs" id="2_ud5nv"]
+[ext_resource type="Script" uid="uid://dwbbya1adgs08" path="res://scripts/gameplay/characters/CharacterMovement.cs" id="3_rktb7"]
+[ext_resource type="SpriteFrames" uid="uid://t53gkek81y3o" path="res://resources/spriteframes/hiker.tres" id="4_rktb7"]
+[ext_resource type="Script" uid="uid://cd4wjd4qdcprd" path="res://scripts/utilities/StateMachine.cs" id="4_ud5nv"]
+[ext_resource type="Script" uid="uid://ckwlbxo7srfoi" path="res://scripts/gameplay/characters/States/NPCRoam.cs" id="5_7t5js"]
+[ext_resource type="Script" uid="uid://ctrb6ovkatw83" path="res://scripts/gameplay/characters/CharacterAnimation.cs" id="6_7t5js"]
+[ext_resource type="Script" uid="uid://buht6kf0jbamm" path="res://scripts/gameplay/characters/States/NPCMessage.cs" id="6_kgnct"]
+
+[sub_resource type="Resource" id="Resource_7t5js"]
+script = ExtResource("2_ud5nv")
+NpcMoveType = 0
+Messages = ["Hey! What's up?"]
+WanderOrigin = Vector2(0, 0)
+WanderRadius = 64.0
+WanderMoveInterval = 2.0
+PatrolPoints = []
+PatrolMoveInterval = 2.0
+PatrolIndex = 0
+LookAroundInterval = 2.0
+metadata/_custom_type_script = "uid://tu5chn0c8wr1"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7t5js"]
+size = Vector2(17.7778, 17.7778)
+
+[node name="NPC" type="CharacterBody2D"]
+texture_filter = 1
+script = ExtResource("1_iify0")
+NPCInputConfig = SubResource("Resource_7t5js")
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+texture_filter = 1
+position = Vector2(16, 16)
+scale = Vector2(0.9, 0.9)
+shape = SubResource("RectangleShape2D_7t5js")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_6jwl0")
+
+[node name="Movement" type="Node" parent="." node_paths=PackedStringArray("Character", "CharacterInput")]
+script = ExtResource("3_rktb7")
+Character = NodePath("..")
+CharacterInput = NodePath("../Input")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("CharacterInput", "CharacterMovement")]
+position = Vector2(16, 8)
+scale = Vector2(0.5, 0.5)
+sprite_frames = ExtResource("4_rktb7")
+animation = &"walk_up"
+script = ExtResource("6_7t5js")
+CharacterInput = NodePath("../Input")
+CharacterMovement = NodePath("../Movement")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("Customer")]
+script = ExtResource("4_ud5nv")
+Customer = NodePath("..")
+
+[node name="Roam" type="Node" parent="StateMachine" node_paths=PackedStringArray("StateOwner", "StateMachine")]
+script = ExtResource("5_7t5js")
+StateOwner = NodePath("../..")
+StateMachine = NodePath("..")
+
+[node name="Message" type="Node" parent="StateMachine" node_paths=PackedStringArray("StateOwner", "StateMachine")]
+script = ExtResource("6_kgnct")
+StateOwner = NodePath("../..")
+StateMachine = NodePath("..")

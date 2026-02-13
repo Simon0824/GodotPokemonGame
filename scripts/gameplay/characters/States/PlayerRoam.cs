@@ -34,22 +34,22 @@ public partial class PlayerRoam : State
         if (Input.IsActionPressed("ui_up"))
         {
             PlayerInput.Direction = Vector2.Up;
-            PlayerInput.TargetPosition = new Vector2(0, -Globals.Instance.GRID_SIZE);
+            PlayerInput.TargetPosition = new Vector2(0, -Globals.GRID_SIZE);
         }
         else if (Input.IsActionPressed("ui_down"))
         {
             PlayerInput.Direction = Vector2.Down;
-            PlayerInput.TargetPosition = new Vector2(0, Globals.Instance.GRID_SIZE);
+            PlayerInput.TargetPosition = new Vector2(0, Globals.GRID_SIZE);
         }
         else if (Input.IsActionPressed("ui_left"))
         {
             PlayerInput.Direction = Vector2.Left;
-            PlayerInput.TargetPosition = new Vector2(-Globals.Instance.GRID_SIZE, 0);
+            PlayerInput.TargetPosition = new Vector2(-Globals.GRID_SIZE, 0);
         }
         else if (Input.IsActionPressed("ui_right"))
         {
             PlayerInput.Direction = Vector2.Right;
-            PlayerInput.TargetPosition = new Vector2(Globals.Instance.GRID_SIZE, 0);
+            PlayerInput.TargetPosition = new Vector2(Globals.GRID_SIZE, 0);
         }
     }
 
@@ -85,8 +85,7 @@ public partial class PlayerRoam : State
     {
         if (Input.IsActionJustReleased("use"))
         {
-            var (_, result) = CharacterMovement.GetTarbetColliders(CharacterMovement.TargetPosition);
-
+            var (_, result) = CharacterMovement.GetTargetColliders(CharacterMovement.TargetPosition);
             foreach (var collision in result)
             {
                 var collider = (Node)(GodotObject)collision["collider"];
@@ -96,6 +95,9 @@ public partial class PlayerRoam : State
                 {
                     case "Sign":
                         ((Sign)collider).PlayMessage();
+                        break;
+                    case "Npc":
+                        ((Npc)collider).PlayMessage(PlayerInput.Direction);
                         break;
                 }
             }

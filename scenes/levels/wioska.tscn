@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=4 uid="uid://dp3g4qj61d4d3"]
+[gd_scene load_steps=12 format=4 uid="uid://dp3g4qj61d4d3"]
 
 [ext_resource type="Script" uid="uid://2d6us2jygb52" path="res://scenes/levels/Level.cs" id="1_vce7u"]
 [ext_resource type="TileSet" uid="uid://cmastf3oqgd8h" path="res://resources/TileSets/level.tres" id="2_1tlw7"]
@@ -6,11 +6,26 @@
 [ext_resource type="PackedScene" uid="uid://m4rpnr7yxnc7" path="res://scenes/levels/spawn_point.tscn" id="4_u5l31"]
 [ext_resource type="PackedScene" uid="uid://lkuovhp745t1" path="res://scenes/levels/sign.tscn" id="5_hfxqk"]
 [ext_resource type="PackedScene" uid="uid://crbct0ijckp0k" path="res://scenes/levels/tall_grass.tscn" id="6_aaukj"]
+[ext_resource type="PackedScene" uid="uid://cm6gd4je2fg75" path="res://scenes/entities/npc.tscn" id="7_yxgh8"]
+[ext_resource type="Script" uid="uid://tu5chn0c8wr1" path="res://scripts/gameplay/characters/NPCInputConfig.cs" id="8_66mkw"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7da3j"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7jwv"]
 size = Vector2(17, 312)
+
+[sub_resource type="Resource" id="Resource_fwqhu"]
+script = ExtResource("8_66mkw")
+NpcMoveType = 0
+Messages = []
+WanderOrigin = Vector2(0, 0)
+WanderRadius = 64.0
+WanderMoveInterval = 2.0
+PatrolPoints = []
+PatrolMoveInterval = 2.0
+PatrolIndex = 0
+LookAroundInterval = 2.0
+metadata/_custom_type_script = "uid://tu5chn0c8wr1"
 
 [node name="Level" type="Node2D"]
 script = ExtResource("1_vce7u")
@@ -150,3 +165,9 @@ position = Vector2(280, 128)
 
 [node name="TallGrass10" parent="TallGrass" instance=ExtResource("6_aaukj")]
 position = Vector2(280, 144)
+
+[node name="NPcs" type="Node2D" parent="."]
+
+[node name="NPC" parent="NPcs" instance=ExtResource("7_yxgh8")]
+position = Vector2(200, 184)
+NPCInputConfig = SubResource("Resource_fwqhu")
