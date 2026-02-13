@@ -85,7 +85,7 @@ public partial class PlayerRoam : State
     {
         if (Input.IsActionJustReleased("use"))
         {
-            var (_, result) = CharacterMovement.GetTargetColliders(CharacterMovement.TargetPosition);
+            var (_, result) = CharacterMovement.GetTargetColliders((PlayerInput.Direction * Globals.GRID_SIZE) + ((Player)StateOwner).Position);
             foreach (var collision in result)
             {
                 var collider = (Node)(GodotObject)collision["collider"];
