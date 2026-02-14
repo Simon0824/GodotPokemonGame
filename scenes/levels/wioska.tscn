@@ -14,13 +14,13 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j7jwv"]
 size = Vector2(17, 312)
 
-[sub_resource type="Resource" id="Resource_fwqhu"]
+[sub_resource type="Resource" id="Resource_yxgh8"]
 script = ExtResource("8_66mkw")
-NpcMoveType = 3
-Messages = []
-WanderOrigin = Vector2(0, 0)
-WanderRadius = 64.0
-WanderMoveInterval = 2.0
+NpcMoveType = 1
+Messages = ["I'm looking for something"]
+WanderOrigin = Vector2(152, 136)
+WanderRadius = 36.0
+WanderMoveInterval = 0.5
 PatrolPoints = []
 PatrolMoveInterval = 2.0
 PatrolIndex = 0
@@ -149,7 +149,7 @@ position = Vector2(136, 144)
 position = Vector2(152, 144)
 
 [node name="TallGrass4" parent="TallGrass" instance=ExtResource("6_aaukj")]
-position = Vector2(168, 144)
+position = Vector2(136, 128)
 
 [node name="TallGrass5" parent="TallGrass" instance=ExtResource("6_aaukj")]
 position = Vector2(24, 144)
@@ -166,8 +166,27 @@ position = Vector2(280, 128)
 [node name="TallGrass10" parent="TallGrass" instance=ExtResource("6_aaukj")]
 position = Vector2(280, 144)
 
+[node name="TallGrass11" parent="TallGrass" instance=ExtResource("6_aaukj")]
+position = Vector2(152, 128)
+
+[node name="TallGrass12" parent="TallGrass" instance=ExtResource("6_aaukj")]
+position = Vector2(168, 144)
+
+[node name="TallGrass13" parent="TallGrass" instance=ExtResource("6_aaukj")]
+position = Vector2(168, 128)
+
+[node name="TallGrass14" parent="TallGrass" instance=ExtResource("6_aaukj")]
+position = Vector2(168, 112)
+
+[node name="TallGrass15" parent="TallGrass" instance=ExtResource("6_aaukj")]
+position = Vector2(152, 112)
+
+[node name="TallGrass16" parent="TallGrass" instance=ExtResource("6_aaukj")]
+position = Vector2(136, 112)
+
 [node name="NPcs" type="Node2D" parent="."]
 
 [node name="Hiker" parent="NPcs" instance=ExtResource("7_yxgh8")]
-position = Vector2(200, 184)
-NPCInputConfig = SubResource("Resource_fwqhu")
+position = Vector2(152, 136)
+up_direction = Vector2(1, 0)
+NPCInputConfig = SubResource("Resource_yxgh8")

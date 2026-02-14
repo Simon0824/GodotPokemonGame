@@ -90,11 +90,13 @@ namespace Game.Gameplay
         {
             var (adjustedTargetPosition, result) = GetTargetColliders(targetPosition);
 
-            if (result.Count > 0)
+            if (result.Count == 0)
             {
-                foreach (var collision in result)
-                {
-                    var collider = (Node)(GodotObject)collision["collider"];
+            return false;
+            }
+            else if (result.Count == 1)
+            {
+                    var collider = (Node)(GodotObject)result[0]["collider"];
                     var colliderType = collider.GetType().Name;
 
                     return colliderType switch
@@ -105,10 +107,11 @@ namespace Game.Gameplay
                         "SceneTrigger" => false,
                         _ => true,
                     };
-                }
             }
-
-            return false;
+            else
+            {
+                return true;
+            }
 
         }
 
@@ -156,7 +159,7 @@ namespace Game.Gameplay
                 return;
             TargetPosition = Character.Position + CharacterInput.Direction * Globals.GRID_SIZE;
             EmitSignal(SignalName.Animation, "walk");
-            if (!IsMoving() && !IsTargetOccupied(TargetPosition))
+            if (!IsMoving() && !IsTargetOccupied(TargetPosition) && SceneManager.GetCurrentLevel().ReserveTile(TargetPosition))
             {
                 Logger.Info($"Moving from {Character.Position} to {TargetPosition}");
 
@@ -205,6 +208,7 @@ namespace Game.Gameplay
 
         public void StopMoving()
         {
+            SceneManager.GetCurrentLevel().ReleaseTile(TargetPosition);
             IsWalking = false;
             IsJumping = false;
             ECharacterMovement = ECharacterMovement.WALKING;

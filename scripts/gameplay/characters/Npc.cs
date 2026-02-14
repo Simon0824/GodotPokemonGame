@@ -112,6 +112,6 @@ namespace Game.Gameplay;
         }
 
         stateMachine.ChangeState("Message");
-        MessageManager.PlayText("Hey! What's up?"); 
+        MessageManager.PlayText([.. NPCInputConfig.Messages]); 
     }
 }
