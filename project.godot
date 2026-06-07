@@ -25,6 +25,10 @@ SceneManager="*res://scenes/core/scene_manager.tscn"
 
 project/assembly_name="NowaGra"
 
+[editor]
+
+movie_writer/movie_file="D:/MoviesGodot/PokemonGame.avi"
+
 [input]
 
 use={
